@@ -1,4 +1,5 @@
 import streamlit as st
+from PIL import Image
 from transformers import pipeline
 
 st.title("Photo Describer")
@@ -17,10 +18,11 @@ photo = st.file_uploader(
 )
 
 if photo is not None:
-    st.image(photo, caption="Your picture", use_container_width=True)
+    image = Image.open(photo).convert("RGB")
+    st.image(image, caption="Your picture", use_container_width=True)
 
     if st.button("Describe this picture"):
         with st.spinner("Looking at the picture..."):
             describer = load_photo_describer()
-            result = describer(photo)
+            result = describer(image)
             st.write("**Description:**", result[0]["generated_text"])
